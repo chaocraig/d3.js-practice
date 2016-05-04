@@ -1,0 +1,16 @@
+<body>
+<svg width="100%" height="100%">
+</svg>
+</body>
+<script src="d3/d3.min.js"></script>
+<script>
+  var data = d3.range(20).map(function(it) {
+    return {
+      value: parseInt(Math.random() * 9 + 1),
+      category: "ABC".charAt(parseInt(Math.random() * 3))
+    };
+  });
+  var result = d3.nest().key(function(it) { return it.category; }).map(data,d3.map).keys();
+  //d3.select("svg").append("text").text(result.tostring()).
+  d3.select("svg").append("div").append("text").text("IJIJ")
+</script>

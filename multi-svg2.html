@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> /* set the CSS */
+
+body { font: 12px Arial;}
+
+path { 
+  stroke: steelblue;
+	stroke-width: 2;
+	fill: none;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: grey;
+	stroke-width: 1;
+	shape-rendering: crispEdges;
+}
+
+</style>
+
+<body>
+
+<!-- load the d3.js library -->	
+<script src="d3/d3.min.js"></script>
+
+<script>
+
+// Set the dimensions of the canvas / graph
+var	margin = {top: 30, right: 20, bottom: 30, left: 50},
+	width = 400 - margin.left - margin.right,
+	height = 220 - margin.top - margin.bottom;
+
+// Parse the date / time
+var	parseDate = d3.time.format("%d-%b-%y").parse;
+
+// Set the ranges
+var	x = d3.time.scale().range([0, width]);
+var	y = d3.scale.linear().range([height, 0]);
+
+// Define the axes
+var	xAxis = d3.svg.axis().scale(x)
+	.orient("bottom").ticks(5);
+
+var	yAxis = d3.svg.axis().scale(y)
+	.orient("left").ticks(5);
+
+// Define the line
+var	valueline = d3.svg.line()
+	.x(function(d) { return x(d.date); })
+	.y(function(d) { return y(d.close); });
+    
+// Adds the svg canvas
+var	chart1 = d3.select("body")
+	.append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+	.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// Get the data
+d3.csv("data1.csv", function(error, data) {
+	data.forEach(function(d) {
+		d.date = parseDate(d.date);
+		d.close = +d.close;
+	});
+
+	// Scale the range of the data
+	x.domain(d3.extent(data, function(d) { return d.date; }));
+	y.domain([0, d3.max(data, function(d) { return d.close; })]);
+
+	// Add the valueline path.
+	chart1.append("path")
+		.attr("class", "line")
+		.attr("d", valueline(data));
+
+	// Add the X Axis
+	chart1.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	// Add the Y Axis
+	chart1.append("g")
+		.attr("class", "y axis")
+		.call(yAxis);
+
+});
+
+// Adds the svg canvas
+var	chart2 = d3.select("body")
+	.append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+	.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		
+// Get the data
+d3.csv("data2.csv", function(error, data) {
+	data.forEach(function(d) {
+		d.date = parseDate(d.date);
+		d.close = +d.close;
+	});
+
+	// Scale the range of the data
+	x.domain(d3.extent(data, function(d) { return d.date; }));
+	y.domain([0, d3.max(data, function(d) { return d.close; })]);
+
+	// Add the valueline path.
+	chart2.append("path")
+		.attr("class", "line")
+		.attr("d", valueline(data));
+
+	// Add the X Axis
+	chart2.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	// Add the Y Axis
+	chart2.append("g")
+		.attr("class", "y axis")
+		.call(yAxis);
+
+});
+
+// Adds the svg canvas
+var	chart3 = d3.select("body")
+	.append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("circle") .attr({
+                    cx: 100,
+                    cy: 100,
+                    r: 100,
+                    fill: "red"
+            });
+
+
+
+var chart4 = d3.select("body")
+	.append("svg");
+
+var update =chart4.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.selectAll("rect").data([3,1,4,1,5,9]);
+
+	update.enter().append("rect");
+	update.exit().remove();
+
+var wscale = d3.scale.linear().domain([0,10]).range([0,300]);
+
+chart4.selectAll("rect")
+  .attr({
+  	width: 10,
+  	fill: 'red',
+  	height: 10
+  })
+  .transition()
+  .duration(1000)
+  .delay(50)
+.attr({
+  x: 50,
+  y: function(d,i) {
+    return 20 + i * 22;
+  },
+  width: function(d,i) {
+    return wscale(d);
+  },
+  height: 10,
+  fill: "red"
+});
+
+
+var g = chart4.append("g");
+console.log(g)
+axis = d3.svg.axis().scale(wscale).orient("left").ticks(10);
+g.attr({
+	transform: "translate(20, 20)"
+}).call(axis);
+
+
+
+
+// Adds the svg canvas
+
+
+
+var chart5 = d3.select("body")
+	.append("svg");
+
+var update =chart5.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.selectAll("rect").data([3,1,4,1,5,9]);
+
+	update.enter().append("rect");
+	update.exit().remove();
+
+
+chart5.selectAll("rect")
+  .attr({
+  	width: 10,
+  	fill: 'green',
+  	height: 10
+  })
+  .transition()
+  .duration(1000)
+  .delay(50)
+.attr({
+  y: 10,
+  x: function(d,i) {
+    return i * 12;
+  },
+  height: function(d,i) {
+    return d * 10;
+  },
+  width: 10,
+  fill: "green"
+});
+
+
+var chart6 = d3.select("body")
+	.append("svg");
+
+var update =chart6.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom);
+
+var xscale = d3.scale.linear();
+xscale.domain([1,9]).range([10,300]);
+
+
+var yscale = d3.scale.linear();
+yscale.domain([10,100]).range([10,250]);
+
+
+builder = d3.svg.area()
+  .x(function(d,i) { return i*5; })
+  .y0(function(d,i) { return 0;})
+  .y1(function(d,i) { return d; });
+
+
+scale_builder = d3.svg.area()
+  .x(function(d,i) { return xscale(i); })
+  .y0(function(d,i) { return 0;})
+  .y1(function(d,i) { return yscale(d); });
+
+
+chart6.append("path").attr({
+  d: builder([30,10,40,10,50,90])
+})
+        .style("fill", "yellow")
+        .style("stroke-width", "2")
+        .style("stroke", "blue");
+
+
+chart6.append("path").attr({
+  d: scale_builder([30,10,40,10,50,90])
+})        .style("fill", "none")
+        .style("stroke-width", "3")
+        .style("stroke", "red");
+
+
+
+
+// Adds the svg canvas
+
+
+var chart7 = d3.select("body")
+	.append("svg");
+
+var update =chart7.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.selectAll("rect").data([3,1,4,1,5,9]);
+
+	update.enter().append("rect");
+	update.exit().remove();
+
+var color = d3.scale.category20();
+var scale = d3.scale.linear().domain([1,9]).range([1,100]);
+
+chart7.selectAll("rect")
+  .attr({
+  	width: 10,
+  	fill: 'red',
+  	height: 10
+  })
+  .transition()
+  .duration(1000)
+  .delay(50)
+.attr({
+  x: function(d,i) { return i * 12; },
+  y: 10,
+  width: 10,
+  height: function(d,i) { return scale(d); },
+  fill: function(d,i) { return  color(d, i)}
+});
+
+
+
+
+var chart8 = d3.select("body")
+	.append("svg");
+
+var update =chart8.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+
+  var data = d3.range(20).map(function(it) {
+    return {
+      value: parseInt(Math.random() * 9 + 1),
+      category: "ABC".charAt(parseInt(Math.random() * 3))
+    };
+  });
+  var result = d3.nest().key(function(it) { return it.category; }).map(data,d3.map).keys();
+  //console.log(result);
+
+chart8.append("text").text(result)  
+	.attr("x", 30)
+	.attr("y", 30)
+	.attr("font-size", 30)
+    .attr("text-anchor", "left")
+    .attr("text-height", 30)
+    .attr("fill", "#000000");
+
+
+
+
+var chart9 = d3.select("body")
+	.append("svg");
+
+var update =chart9.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+
+
+
+var data = d3.range(40).map(function(it) {
+  return {
+    value: parseInt(Math.random() * 9 + 1),
+    category:  parseInt(Math.random() * 8)
+  };
+});
+//console.log('data', data)
+
+var entries = d3.nest().key(function(it) { return it.category; }).entries(data,d3.map);
+var root = {values: entries};
+var nodes = d3.layout.pack()
+   .size([400, 200])
+   .children(function(it) {
+     return it.values;
+   })
+   .nodes(root)
+ console.log('nodes', nodes)
+var color = d3.scale.category20();
+
+var fill_color = function(data, depth, category) {
+	
+	if (depth == 0) { return 'none';}
+	else if (depth == 1) {
+		console.log('data.values[0]', data.values[0])
+		return color(data.values[0].category+1);
+	}
+	else {return color(category);}
+}
+
+chart9
+  .selectAll("circle")
+  .data(nodes)
+  .enter().append("circle")
+    .attr({
+      cx: function(it) { return it.x; },
+      cy: function(it) { return it.y; },
+      r:  function(it) { return it.r; },
+      fill: function(d,i) {
+      	return fill_color(d, d.depth, d.category);
+      },
+      stroke: "#000"
+    });
+
+
+
+
+var chart10 = d3.select("body")
+	.append("svg");
+
+var update10 =chart10.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+
+
+var data = d3.range(40).map(function(it) {
+  return {
+    value: parseInt(Math.random() * 9 + 1),
+    category: parseInt(Math.random() * 9)
+  };
+});
+
+var color = d3.scale.category20();
+
+update10.selectAll("circle")
+  .data(data)
+  .enter().append("circle")
+
+function render10() {
+  update10.selectAll("circle")
+      .attr({
+        cx: function(it) { return it.x ; },
+        cy: function(it) { return it.y ; },
+        r:  function(it) { return it.value * 2 },
+        fill: function(d,i) { return color(d.category); },
+        stroke: "#000"
+      });
+}
+
+var force = d3.layout.force()
+  .size([200, 200])
+  .nodes(data)
+  .on("tick", render10)
+  .start();
+
+//-------
+
+
+var chart11 = d3.select("body")
+	.append("svg");
+
+var update11 =chart11.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+
+
+
+var data = d3.range(40).map(function(it) {
+  return {
+    value: parseInt(Math.random() * 9 + 1),
+    category: parseInt(Math.random() * 9)
+  };
+});
+
+var color = d3.scale.category20();
+
+update11.selectAll("circle")
+  .data(data)
+  .enter().append("circle");
+
+function render11() {
+  for(var i=0;i<data.length;i++) {
+    n = data[i];
+    dx = 10 - n.x;
+    dy = 5 - n.y;
+    len = Math.sqrt(dx * dx + dy * dy );
+    n.x -= dy / len;
+    n.y += dx / len;
+    //if (n.x < 30) {n.x=200;}
+    //if (n.y > 200) {n.y=20;}
+  }
+  update11.selectAll("circle")
+      .attr({
+        cx: function(it) { return it.x; },
+        cy: function(it) { return it.y; },
+        r:  function(it) { return it.value; },
+        fill: function(d,i) { return color(d.category); },
+        stroke: "#000"
+      });
+}
+
+var force11 = d3.layout.force()
+  .size([200, 200])
+  .nodes(data)
+  //.on("tick", render11)
+  //.start();
+
+setTimeout(function tick(){
+    force11.on("tick", render11)
+  	.start();
+    setTimeout(function tick(){
+    force11.stop();}, 1000);
+}, 1000);
+
+
+</script>
+
+<p>
+
+
+</body>
